@@ -6,7 +6,7 @@ const baseURL = 'http://localhost:3001/api';
 const http: AxiosInstance = axios.create({
 	baseURL: baseURL,
 	headers: { 'Content-Type': 'application/json' },
-	withCredentials: true,
+	// withCredentials: true,
 	timeout: 20000,
 });
 
