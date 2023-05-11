@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 import http from '../http';
-import { Group } from '../models/Group';
+import Group from '../models/Group';
 
 export default () => {
   return useSWR<Group[]>('/leaderboard', async () => {
