@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import classNames from '../helpers/classNames';
 import Input from '../components/Input';
+import classNames from 'classnames';
+import Button from '../components/Button';
+import { ArrowRightIcon } from '@heroicons/react/24/solid'
 
 const Manage = () => {
   const [active, setActive] = useState(0)
@@ -26,7 +28,7 @@ const Manage = () => {
 
   return (
     <div className='w-full h-screen flex justify-center px-2 items-center'>
-      <div className='w-full max-w-lg'>
+      <section className='w-full max-w-lg'>
         <div className='flex flex-col'>
           <div className='flex flex-col gap-2 mb-4'>
             {events.map((event, index) => (
@@ -36,9 +38,14 @@ const Manage = () => {
               </div>
             ))}
           </div>
+          <div className='w-full flex gap-2'>
           <Input type='number' onChange={(e) => console.log(e.target.value)} placeholder='Student ID' />
+          <Button size={'square'}>
+            <ArrowRightIcon className='text-white h-6 w-6' />
+          </Button>
+          </div>
         </div>
-      </div>
+      </section>
     </div>
   )
 }

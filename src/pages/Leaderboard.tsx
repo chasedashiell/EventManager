@@ -27,7 +27,7 @@ const Leaderboard = () => {
 
   return (
     <div className='w-full h-screen flex justify-center px-2 items-center'>
-      <div className='w-full max-w-md'>
+      <section className='w-full max-w-md'>
         <h1 className='text-gray-100 text-3xl text-semibold pb-2'>Leaderboard</h1>
         <div className='flex flex-col gap-2'>
           {leaderboard.map((group, index) => (
@@ -42,7 +42,7 @@ const Leaderboard = () => {
             </div>
           ))}
         </div>
-      </div>
+      </section>
     </div>
   )
 }

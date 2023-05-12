@@ -6,6 +6,7 @@ import {
 import './index.css'
 import Leaderboard from './pages/Leaderboard';
 import Manage from './pages/Manage';
+import Login from './pages/Login';
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
   {
     path: '/manage',
     element: <Manage />
+  },
+  {
+    path: '/login',
+    element: <Login />
   }
 ]);
 
