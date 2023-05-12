@@ -24,13 +24,17 @@ public class PasswordManager {
         }
     }
 
-    public static void addUser(String userName, String password) {
+    public static boolean addUser(String userName, String password) {
+        if (!searchForUser(userName)) {
+            System.out.println("Username already exists");
+            return false;
+        }
         try {
             BufferedReader reader = new BufferedReader(new FileReader("users.csv"));
             String line = reader.readLine();
             ArrayList<User> users = new ArrayList<>();
-            while (line != null){
-                while (line != null){
+            while (line != null) {
+                while (line != null) {
                     String[] a = line.split(",");
                     if (a.length >= 2) {
                         users.add(new User(a[0], a[1]));
@@ -46,39 +50,97 @@ public class PasswordManager {
                 for (int j = i; j < users.size(); j++) {
                     if (minValue.compareTo(users.get(j).getName()) > 0) {
                         minValue = users.get(j).getName();
-                            minIndex = j;
+                        minIndex = j;
                     }
                 }
                 User tmp = users.get(i);
-            users.set(i, users.get(minIndex));
-            users.set(minIndex, tmp);
+                users.set(i, users.get(minIndex));
+                users.set(minIndex, tmp);
             }
 
-
-
-
-
             FileWriter writer = new FileWriter("users.csv");
-            for (User u : users){
-                writer.write(u.getName() + "," + generateSHA256Hash( u.getPassword()));
+            for (User u : users) {
+                writer.write(u.getName() + "," + generateSHA256Hash(u.getPassword()));
                 writer.write(System.lineSeparator());
             }
             writer.close();
         } catch (Exception e) {
             System.out.println(e);
         }
-
+        return true;
     }
 
-    private static void sortCSV(){
-
+    public static boolean searchForUser(String username) {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("users.csv"));
+            String line = reader.readLine();
+            ArrayList<User> users = new ArrayList<>();
+            while (line != null) {
+                while (line != null) {
+                    String[] a = line.split(",");
+                    if (a.length >= 2) {
+                        users.add(new User(a[0], a[1]));
+                    }
+                    line = reader.readLine();
+                }
+            }
+            reader.close();
+            for (User u : users) {
+                if (u.getName().equals(username)) {
+                    return false;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return true;
     }
 
-    public static void authorizePassword(String user, String password){
-        String hashPw = generateSHA256Hash(password);
-        
+    public static boolean authorizePassword(String username, String password) {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("users.csv"));
+            String line = reader.readLine();
+            ArrayList<User> users = new ArrayList<>();
+            while (line != null) {
+                while (line != null) {
+                    String[] a = line.split(",");
+                    if (a.length >= 2) {
+                        users.add(new User(a[0], a[1]));
+                    }
+                    line = reader.readLine();
+                }
+            }
+            reader.close();
+            int indexOfUser = orderedBinarySearch(users, username);
+            System.out.println(users.get(0).getPassword());
+            System.out.println(generateSHA256Hash(password));
+            if (indexOfUser == -1) {
+                return false;
+            } else if (users.get(indexOfUser).getPassword().equals(generateSHA256Hash(password))) {
+                return true;
+            }
 
-
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return false;
     }
 
+    private static int orderedBinarySearch(ArrayList<User> items, String term) {
+        int max = items.size() - 1;
+        int mid = items.size() / 2;
+        int min = 0;
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(mid).getName().compareTo(term) == 0) {
+                return mid;
+            } else if (items.get(mid).getName().compareTo(term) < 0) {
+                max = mid;
+                mid = max / 2;
+            } else if (items.get(mid).getName().compareTo(term) > 0) {
+                min = mid;
+                mid = (min + max) / 2;
+            }
+        }
+        return -1;
+    }
 }
