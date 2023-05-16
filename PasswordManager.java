@@ -5,20 +5,15 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Base64;
 
 public class PasswordManager {
-    private static String generateSHA256Hash(String input) {
+    public static String generateSHA256Hash(String input) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(input.getBytes(StandardCharsets.UTF_8));
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : hash) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1)
-                    hexString.append('0');
-                hexString.append(hex);
-            }
-            return hexString.toString();
+            byte[] hash = digest.digest(input.getBytes(StandardCharsets.ISO_8859_1));
+            Base64.Encoder e = Base64.getEncoder();
+            return e.encodeToString(hash);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("SHA-256 algorithm not available", e);
         }
@@ -34,15 +29,13 @@ public class PasswordManager {
             String line = reader.readLine();
             ArrayList<User> users = new ArrayList<>();
             while (line != null) {
-                while (line != null) {
-                    String[] a = line.split(",");
-                    if (a.length >= 2) {
-                        users.add(new User(a[0], a[1]));
-                    }
-                    line = reader.readLine();
+                String[] a = line.split(",");
+                if (a.length >= 2) {
+                    users.add(new User(a[0], a[1]));
                 }
+                line = reader.readLine();
             }
-            users.add(new User(userName, password));
+            users.add(new User(userName, generateSHA256Hash(password)));
             reader.close();
             for (int i = 0; i < users.size(); i++) {
                 String minValue = users.get(i).getName();
@@ -60,7 +53,7 @@ public class PasswordManager {
 
             FileWriter writer = new FileWriter("users.csv");
             for (User u : users) {
-                writer.write(u.getName() + "," + generateSHA256Hash(u.getPassword()));
+                writer.write(u.getName() + "," + u.getPassword());
                 writer.write(System.lineSeparator());
             }
             writer.close();
@@ -112,7 +105,7 @@ public class PasswordManager {
             }
             reader.close();
             int indexOfUser = orderedBinarySearch(users, username);
-            System.out.println(users.get(0).getPassword());
+            System.out.println(users.get(indexOfUser).getPassword());
             System.out.println(generateSHA256Hash(password));
             if (indexOfUser == -1) {
                 return false;
@@ -133,11 +126,11 @@ public class PasswordManager {
         for (int i = 0; i < items.size(); i++) {
             if (items.get(mid).getName().compareTo(term) == 0) {
                 return mid;
-            } else if (items.get(mid).getName().compareTo(term) < 0) {
-                max = mid;
-                mid = max / 2;
             } else if (items.get(mid).getName().compareTo(term) > 0) {
-                min = mid;
+                max = mid-1;
+                mid = max / 2;
+            } else if (items.get(mid).getName().compareTo(term) < 0) {
+                min = mid+1;
                 mid = (min + max) / 2;
             }
         }

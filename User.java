@@ -15,4 +15,8 @@ public class User {
     }public void setScore(String password) {
         this.password = password;
     }
+
+    public String toString() {
+        return "user: " + getName() + " | password: " + getPassword();
+    }
 }
