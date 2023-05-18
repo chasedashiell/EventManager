@@ -47,7 +47,8 @@ const Manage = () => {
             <Button onClick={() => setOpen(true)} size={"square"}>
               <PlusIcon className='text-white h-6 w-6' />
             </Button>
-          </div>        <div className='flex flex-col'>
+          </div>
+          <div className='flex flex-col'>
             <div className='flex flex-col gap-2 mb-4'>
               {events.map((event, index) => (
                 <div key={index} onClick={() => setActive(index)} className={classNames('rounded-md border-2 flex flex-row items-center justify-between bg-slate-700 py-4 px-3 cursor-pointer', index == active ? 'border-red-500' : 'border-transparent')}>
