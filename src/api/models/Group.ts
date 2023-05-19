@@ -1,5 +1,5 @@
 export default interface Group {
-	name: string;
+	grade: string;
 	rank: number;
 	points: number;
 	index: number;
