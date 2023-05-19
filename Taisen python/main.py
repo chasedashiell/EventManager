@@ -30,7 +30,10 @@ def points():
         # Read the CSV
         leaderboard = pd.read_csv(r'classes.csv')
         # Update the value
-        leaderboard.loc[leaderboard['name'] == request_data['name'], 'points'] = request_data['amount']
+        if (int(request_data['grade']) in leaderboard['grade'].tolist()):
+            leaderboard.loc[leaderboard['grade'] == int(request_data['grade']), 'points'] += request_data['points']
+        else:
+            leaderboard.loc[request_data['grade']] = [request_data['grade'], request_data['points']]
         # Save the CSV
         leaderboard.to_csv(r'classes.csv', index=False)
         return request_data
