@@ -1,6 +1,6 @@
 import csv
 import json
-from flask import Flask, request
+from flask import Flask, request, make_response
 from flask_cors import CORS, cross_origin
 import pandas as pd
 
@@ -23,10 +23,13 @@ def csv_to_json(csvFilePath):
 @app.route('/leaderboard', methods=['GET', 'POST'])
 def points():
     if request.method == 'GET':
-        return csv_to_json(r'classes.csv')
+        return make_response(csv_to_json(r'classes.csv'), 200)
     if request.method == 'POST':
         # Serialize the data into a dictionary
         request_data = json.loads(request.data)
+        # Validate the data
+        if len(request_data['grade']) <= 4:
+            return make_response('Invalid grade', 400)
         # Read the CSV
         leaderboard = pd.read_csv(r'classes.csv')
         # Update the value
@@ -36,6 +39,6 @@ def points():
             leaderboard.loc[request_data['grade']] = [request_data['grade'], request_data['points']]
         # Save the CSV
         leaderboard.to_csv(r'classes.csv', index=False)
-        return request_data
+        return make_response('Success', 201)
 
 app.run(host='0.0.0.0', port=5000, debug=True)
