@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import http from '../http';
+import http from '../helpers/http';
 import Group from '../models/Group';
 
 export default () => {

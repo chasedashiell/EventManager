@@ -1,5 +1,5 @@
 import { mutate } from 'swr';
-import http from '../http';
+import http from '../helpers/http';
 import Group from '../models/Group';
 import Event from '../models/Event';
 
