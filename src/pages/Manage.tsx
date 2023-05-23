@@ -22,15 +22,15 @@ const Manage = () => {
     },
     {
       "name": "Football Game",
-      "points": 2
+      "points": 4
     },
     {
       "name": "Football Game",
-      "points": 2
+      "points": 5
     },
     {
       "name": "Football Game",
-      "points": 2
+      "points": 3
     }
   ]
 
@@ -40,7 +40,7 @@ const Manage = () => {
   const submit = (values: Values, { setSubmitting }: FormikHelpers<Values>) => {
     // No need to format the grade here, it is done in the request
     console.log(values.grade)
-    addPoints(getGraduationYear(values.grade), active)
+    addPoints(getGraduationYear(values.grade), events[active].points)
       .then(() => {
         setSubmitting(false)
       })
